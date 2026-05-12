@@ -1,6 +1,0 @@
-/* Used board "nucleo_f103rb" has "green_led_2" node instead of "led0" node defined */
-/ {
-	aliases {
-		app-led = &green_led_2;
-	};
-};

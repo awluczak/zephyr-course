@@ -1,9 +1,0 @@
-config APP_HEARTBEAT_PERIOD_MS
-	int "App heartbeat period [ms] (100-2000)"
-	range 100 2000
-	default 500
-	help
-	    Set the period of the app heartbeat indicated by LED flashing.
-
-source "Kconfig.zephyr"
-
