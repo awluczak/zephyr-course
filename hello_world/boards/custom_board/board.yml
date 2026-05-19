@@ -1,6 +1,0 @@
-board:
-  name: custom_board
-  full_name: Custom Board
-  vendor: Adam
-  socs:
-    - name: stm32f103xb
