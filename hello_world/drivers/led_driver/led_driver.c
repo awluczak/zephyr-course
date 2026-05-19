@@ -10,6 +10,7 @@ LOG_MODULE_REGISTER(led_driver, LOG_LEVEL_DBG);
 struct led_driver_data
 {
 	struct gpio_dt_spec led;
+	int attribute;
 };
 
 static int channel_get_impl(const struct device *dev,
@@ -34,10 +35,26 @@ static int sample_fetch_impl(const struct device *dev)
 	return 0;
 }
 
+static int attr_set_impl(const struct device *dev,
+				 enum sensor_channel chan,
+				 enum sensor_attribute attr,
+				 const struct sensor_value *val)
+{
+	LOG_INF("sensor_attr_set called");
+
+	struct led_driver_data *data = dev->data;
+	
+	data->attribute = val->val1;
+	LOG_INF("New attribute value = %d", data->attribute);
+
+	return 0;
+}
+
 static DEVICE_API(sensor, api_adam_custom) =
 {
 	.channel_get  = channel_get_impl,
 	.sample_fetch = sample_fetch_impl,
+	.attr_set = attr_set_impl,
 };
 
 static int init(const struct device *dev)
@@ -66,6 +83,7 @@ static int init(const struct device *dev)
 	static struct led_driver_data led_driver_data_##inst =        \
 	{                                                             \
 		.led   = GPIO_DT_SPEC_INST_GET(inst, gpios),              \
+		.attribute = 0,                                           \
 	};                                                            \
 	DEVICE_DT_INST_DEFINE(inst, init, NULL,                       \
 	                      &led_driver_data_##inst, NULL,          \

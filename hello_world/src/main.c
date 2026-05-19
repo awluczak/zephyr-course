@@ -21,9 +21,8 @@ int main(void)
 	
 	while(1)
 	{
-		sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &value);
-		k_msleep(1000);
-		sensor_sample_fetch(dev);
+		value.val1++;
+		sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_RESOLUTION, &value);
 		k_msleep(1000);
 	}
 
