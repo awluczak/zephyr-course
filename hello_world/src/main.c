@@ -10,20 +10,50 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/shell/shell.h>
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_DBG);
 
 const struct device *dev = DEVICE_DT_GET(DT_NODELABEL(led_driver0)); 
 
+static int cmd_version(const struct shell *sh, size_t argc, size_t **argv)
+{
+	shell_print(sh, "Version is 1.0.0");
+	return 0;
+}
+
+static int cmd_fetch(const struct shell *sh, size_t argc, size_t **argv)
+{
+	return sensor_sample_fetch(dev);
+}
+
+static int cmd_read(const struct shell *sh, size_t argc, size_t **argv)
+{
+    struct sensor_value value = {0};
+	int ret = sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &value);
+	shell_print(sh, "Value = %d", value.val1);
+	return ret;
+}	
+
+static int cmd_info(const struct shell *sh, size_t argc, size_t **argv)
+{
+	shell_print(sh, "Device name: %s", dev->name);
+	shell_print(sh, "Device ready: %s", dev->state->initialized ? "Yes" : "No");
+	return 0;
+}
+
+SHELL_CMD_REGISTER(version, NULL, "Print application version", cmd_version);
+SHELL_CMD_REGISTER(fetch, NULL, "Fetch sensor sample", cmd_fetch);
+SHELL_CMD_REGISTER(read, NULL, "Read sensor channel value", cmd_read);
+SHELL_CMD_REGISTER(info, NULL, "Print device information and ready state", cmd_info);
+
 int main(void)
 {
-	struct sensor_value value = {0};
+	
 	
 	while(1)
 	{
-		value.val1++;
-		sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_RESOLUTION, &value);
-		k_msleep(1000);
+		k_sleep(K_FOREVER);
 	}
 
 	return 0;
