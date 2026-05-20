@@ -1,9 +1,0 @@
-description: Simple LED driver
-compatible: adam,led_driver
-include: base.yaml
-
-properties:
-  gpios:
-    type: phandle-array
-    required: true
-    description: GPIO for the on-board LED

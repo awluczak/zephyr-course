@@ -1,3 +1,0 @@
-config LED_DRIVER
-    bool "LED Driver"
-    default y
